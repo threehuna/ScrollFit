@@ -1,0 +1,48 @@
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+!*.xcworkspace/xcshareddata
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Build
+build/
+*.swiftmodule
+*.swiftdoc
+
+# Environment
+.env
+.env.local
+
+# Internal
+internal/
+
+# Cursor
+.cursor/
+.cursorignore
+
+# Claude
+.claude/
+.claudeignore
+CLAUDE.md
+
+AGENTS.md
