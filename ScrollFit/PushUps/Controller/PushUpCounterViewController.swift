@@ -31,8 +31,8 @@ final class PushUpCounterViewController: UIViewController {
     }()
 
     private let logoImageView: UIImageView = {
-        let config = UIImage.SymbolConfiguration(pointSize: 26, weight: .semibold)
-        let image  = UIImage(systemName: "figure.strengthtraining.traditional", withConfiguration: config)
+        let image  = UIImage(named: "scrollFitLogo")
+        image?.withRenderingMode(.alwaysOriginal)
         let view   = UIImageView(image: image)
         view.tintColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
         view.contentMode = .scaleAspectFit
@@ -138,8 +138,8 @@ final class PushUpCounterViewController: UIViewController {
             // Logo + Title (centered together in headerView)
             logoImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             logoImageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -8),
-            logoImageView.widthAnchor.constraint(equalToConstant: 32),
-            logoImageView.heightAnchor.constraint(equalToConstant: 32),
+            logoImageView.widthAnchor.constraint(equalToConstant: 42),
+            logoImageView.heightAnchor.constraint(equalToConstant: 42),
 
             titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor, constant: 20),
