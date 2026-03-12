@@ -7,6 +7,11 @@ import Vision
 
 final class PushUpCounterViewController: UIViewController {
 
+    // MARK: - Coordinator callback
+
+    /// WorkoutCoordinator подписывается на это замыкание для обработки завершения.
+    var onCancel: (() -> Void)?
+
     // MARK: - Dependencies
 
     private let cameraManager         = CameraManager()
@@ -238,7 +243,8 @@ final class PushUpCounterViewController: UIViewController {
         cameraManager.stop()
         pushUpAnalyzer.reset()
         poseSmoother.reset()
-        dismiss(animated: true)
+        // Уведомляем координатор — он решает, как закрыть экран
+        onCancel?()
     }
 
     // MARK: - UI Update
