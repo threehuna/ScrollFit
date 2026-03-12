@@ -28,9 +28,9 @@ final class MainTabBarController: UITabBarController {
 
         NSLayoutConstraint.activate([
             customTabBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            customTabBar.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
-            customTabBar.widthAnchor.constraint(equalToConstant: 236),
-            customTabBar.heightAnchor.constraint(equalToConstant: 62),
+            customTabBar.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -35),
+            customTabBar.widthAnchor.constraint(equalToConstant: 240),
+            customTabBar.heightAnchor.constraint(equalToConstant: 72),
         ])
 
         customTabBar.onTabSelected = { [weak self] index in

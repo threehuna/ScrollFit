@@ -43,26 +43,21 @@ final class CustomTabBarView: UIView {
 
     private func setupAppearance() {
         backgroundColor = UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 0.7)
-        layer.cornerRadius = 31
+        layer.cornerRadius = 36
         layer.borderWidth  = 4
         layer.borderColor  = green.cgColor
         clipsToBounds      = true
     }
 
     private func setupButtons() {
+        let iconCfg = UIImage.SymbolConfiguration(pointSize: 26, weight: .semibold)
         // Home
-        let iconCfg = UIImage.SymbolConfiguration(pointSize: 22, weight: .semibold)
         homeButton.setImage(UIImage(systemName: "house.fill", withConfiguration: iconCfg), for: .normal)
         homeButton.addTarget(self, action: #selector(homeTapped), for: .touchUpInside)
         homeButton.translatesAutoresizingMaskIntoConstraints = false
 
         // Workout (center) — green circle with plus
-        workoutButton.backgroundColor = green
-        workoutButton.layer.cornerRadius = 20
-        workoutButton.clipsToBounds = true
-        let plusCfg = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold)
-        workoutButton.setImage(UIImage(systemName: "plus", withConfiguration: plusCfg), for: .normal)
-        workoutButton.tintColor = UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1)
+        workoutButton.setImage(UIImage(named: "plusButton"), for: .normal)
         workoutButton.addTarget(self, action: #selector(workoutTapped), for: .touchUpInside)
         workoutButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -81,18 +76,18 @@ final class CustomTabBarView: UIView {
         NSLayoutConstraint.activate([
             homeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             homeButton.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -72),
-            homeButton.widthAnchor.constraint(equalToConstant: 40),
-            homeButton.heightAnchor.constraint(equalToConstant: 40),
+            homeButton.widthAnchor.constraint(equalToConstant: 45),
+            homeButton.heightAnchor.constraint(equalToConstant: 45),
 
             workoutButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             workoutButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            workoutButton.widthAnchor.constraint(equalToConstant: 40),
-            workoutButton.heightAnchor.constraint(equalToConstant: 40),
+            workoutButton.widthAnchor.constraint(equalToConstant: 55),
+            workoutButton.heightAnchor.constraint(equalToConstant: 55),
 
             statsButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             statsButton.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 72),
-            statsButton.widthAnchor.constraint(equalToConstant: 40),
-            statsButton.heightAnchor.constraint(equalToConstant: 40),
+            statsButton.widthAnchor.constraint(equalToConstant: 45),
+            statsButton.heightAnchor.constraint(equalToConstant: 45),
         ])
     }
 
