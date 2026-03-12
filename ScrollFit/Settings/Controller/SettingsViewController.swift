@@ -29,7 +29,10 @@ final class SettingsViewController: UIViewController {
         return label
     }()
 
+    private let gradientView = GradientBackgroundView()
+
     private func setupHierarchy() {
+        view.insertSubview(gradientView, at: 0)
         view.addSubview(titleLabel)
     }
 
@@ -41,7 +44,7 @@ final class SettingsViewController: UIViewController {
     }
 
     private func setupAppearance() {
-        view.backgroundColor = UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1)
+        gradientView.frame = view.bounds
         // Показываем nav bar для кнопки Back
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.tintColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)

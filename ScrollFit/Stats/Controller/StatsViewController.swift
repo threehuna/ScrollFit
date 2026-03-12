@@ -30,9 +30,11 @@ final class StatsViewController: UIViewController {
     }()
 
 
+    private let gradientView = GradientBackgroundView()
+
     private func setupHierarchy() {
+        view.insertSubview(gradientView, at: 0)
         view.addSubview(titleLabel)
-        
     }
 
     private func setupLayout() {
@@ -43,7 +45,7 @@ final class StatsViewController: UIViewController {
     }
 
     private func setupAppearance() {
-        view.backgroundColor = UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1)
+        gradientView.frame = view.bounds
         navigationController?.navigationBar.isHidden = true
     }
 
