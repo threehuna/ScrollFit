@@ -9,8 +9,8 @@ final class SkeletonOverlayView: UIView {
 
     // MARK: - Appearance
 
-    var boneColor:   UIColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1) // #a5f133
-    var jointColor:  UIColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
+    var boneColor:   UIColor = UIColor(.scrollFitGreen) 
+    var jointColor:  UIColor = UIColor(.scrollFitGreen)
     var lineWidth:   CGFloat = 3
     var jointRadius: CGFloat = 5
 

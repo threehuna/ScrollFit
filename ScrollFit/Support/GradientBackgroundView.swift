@@ -12,10 +12,10 @@ final class GradientBackgroundView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         gradientLayer.colors = [
-            UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1).cgColor,
-            UIColor(red: 0.596, green: 0.584, blue: 0.596, alpha: 1).cgColor,
+            UIColor(.scrollFitBlack).cgColor,
+            UIColor(.scrollFitGray).cgColor,
         ]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.2)
         gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1)
         layer.insertSublayer(gradientLayer, at: 0)
         autoresizingMask = [.flexibleWidth, .flexibleHeight]

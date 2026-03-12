@@ -34,7 +34,7 @@ final class PushUpCounterViewController: UIViewController {
         let image  = UIImage(named: "scrollFitLogo")
         image?.withRenderingMode(.alwaysOriginal)
         let view   = UIImageView(image: image)
-        view.tintColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
+        view.tintColor = UIColor(.scrollFitGreen)
         view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -65,9 +65,9 @@ final class PushUpCounterViewController: UIViewController {
     private let cancelButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Отмена", for: .normal)
-        btn.setTitleColor(UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1), for: .normal)
+        btn.setTitleColor(UIColor(.scrollFitBlack), for: .normal)
         btn.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 20) ?? UIFont.boldSystemFont(ofSize: 20)
-        btn.backgroundColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
+        btn.backgroundColor = UIColor(.scrollFitGreen)
         btn.layer.cornerRadius = 31
         btn.clipsToBounds = true
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -177,11 +177,11 @@ final class PushUpCounterViewController: UIViewController {
     // MARK: - Setup Appearance
 
     private func setupGradient() {
-        let darkTop  = UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1).cgColor  // #323132
-        let grayBot  = UIColor(red: 0.596, green: 0.584, blue: 0.596, alpha: 1).cgColor  // #989598
+        let darkTop  = UIColor(.scrollFitBlack).cgColor
+        let grayBot  = UIColor(.scrollFitGray).cgColor  
         gradientLayer.colors     = [darkTop, grayBot]
         gradientLayer.locations  = [0.0, 1.0]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.2)
         gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1)
     }
 

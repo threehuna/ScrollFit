@@ -42,7 +42,7 @@ final class InstructionBarView: UIView {
     // MARK: - Setup
 
     private func setup() {
-        backgroundColor = UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1) // #323132
+        backgroundColor = UIColor(.scrollFitBlack)
         layer.cornerRadius = 30
         layer.borderWidth = 3
         layer.borderColor = UIColor.white.cgColor

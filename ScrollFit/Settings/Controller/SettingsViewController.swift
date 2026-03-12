@@ -47,7 +47,7 @@ final class SettingsViewController: UIViewController {
         gradientView.frame = view.bounds
         // Показываем nav bar для кнопки Back
         navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.tintColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
+        navigationController?.navigationBar.tintColor = UIColor(.scrollFitGreen)
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         title = "Настройки"
     }

@@ -36,7 +36,7 @@ final class RepCounterView: UIView {
     // MARK: - Setup
 
     private func setup() {
-        backgroundColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1) // #a5f133
+        backgroundColor = UIColor(.scrollFitGreen) 
         layer.cornerRadius = diameter / 2
         clipsToBounds = false
         translatesAutoresizingMaskIntoConstraints = false
