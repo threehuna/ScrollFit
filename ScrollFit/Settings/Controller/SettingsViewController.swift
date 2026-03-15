@@ -4,51 +4,67 @@
 import UIKit
 
 /// Экран настроек. Открывается push'ем из HomeViewController.
-/// TODO: реализовать контент
 final class SettingsViewController: UIViewController {
 
     weak var coordinator: HomeCoordinator?
 
+    // MARK: - Subviews
+
+    private let gradientView = GradientBackgroundView()
+
+    private let multiplierRow = MultiplierRowView()
+
+    private let sectionTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Соотношение"
+        label.textColor = .scrollFitGray
+        label.font = UIFont.systemFont(ofSize: 25, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupAppearance()
         setupHierarchy()
         setupLayout()
-        setupAppearance()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        multiplierRow.reload()
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 
     // MARK: - Setup
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Настройки"
-        label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    private let gradientView = GradientBackgroundView()
-
-    private func setupHierarchy() {
-        view.insertSubview(gradientView, at: 0)
-        view.addSubview(titleLabel)
-    }
-
-    private func setupLayout() {
-        NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-    }
-
     private func setupAppearance() {
         gradientView.frame = view.bounds
-        // Показываем nav bar для кнопки Back
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.tintColor = UIColor(.scrollFitGreen)
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         title = "Настройки"
+    }
+
+    private func setupHierarchy() {
+        view.insertSubview(gradientView, at: 0)
+        view.addSubview(sectionTitleLabel)
+
+        multiplierRow.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(multiplierRow)
+    }
+
+    private func setupLayout() {
+        NSLayoutConstraint.activate([
+            sectionTitleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            sectionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+
+            multiplierRow.topAnchor.constraint(equalTo: sectionTitleLabel.bottomAnchor, constant: 20),
+            multiplierRow.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            multiplierRow.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+        ])
     }
 }

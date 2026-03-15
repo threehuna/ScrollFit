@@ -14,9 +14,6 @@
 		2CB4AE712F62185C00D0F465 /* Exceptions for "ScrollFit" folder in "ScrollFit" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				.claude/commands/task.md,
-				".claude/skills/git-workflow/SKILL.md",
-				".claude/skills/uikit-guidelines/SKILL.md",
 				Info.plist,
 			);
 			target = 2CB4AE5E2F62185B00D0F465 /* ScrollFit */;
