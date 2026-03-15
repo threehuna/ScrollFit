@@ -156,8 +156,8 @@ final class StatsViewController: UIViewController {
         ))
 
         card3.configure(with: StatCardViewModel(
-            icon: UIImage(named: "muscleArmWhite"),
-            iconTintColor: UIColor(.scrollFitGreen),
+            icon: UIImage(named: "muscleArmGreen"),
+            iconTintColor: UIColor(.scrollFitBlue),
             value: "\(stats.avgPerDay)",
             description: "отжиманий в день (за посл. 30 дней)",
             category: "В среднем"
@@ -165,7 +165,7 @@ final class StatsViewController: UIViewController {
 
         card4.configure(with: StatCardViewModel(
             icon: UIImage(systemName: "calendar.badge.clock", withConfiguration: iconCfg),
-            iconTintColor: UIColor(.scrollFitGreen),
+            iconTintColor: UIColor(.scrollFitBlue),
             value: "\(stats.thisWeekTotal)",
             description: "отжимания",
             category: "На этой неделе",
