@@ -42,6 +42,17 @@ final class StatsViewController: UIViewController {
         setupAppearance()
         loadData()
         setupInfoActions()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadData()
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
@@ -297,6 +308,10 @@ final class StatsViewController: UIViewController {
         // Плавное появление
         overlay.alpha = 0
         UIView.animate(withDuration: 0.15) { overlay.alpha = 1 }
+    }
+
+    @objc private func appWillEnterForeground() {
+        loadData()
     }
 
     @objc private func dismissTooltip() {

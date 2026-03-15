@@ -97,6 +97,17 @@ final class HomeViewController: UIViewController {
         setupAppearance()
         setupActions()
         loadData()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadData()
     }
 
     override func viewDidLayoutSubviews() {
@@ -273,6 +284,10 @@ final class HomeViewController: UIViewController {
         selectedDate = date
         reloadCalendar()
         reloadCharts(for: date)
+    }
+
+    @objc private func appWillEnterForeground() {
+        loadData()
     }
 
     @objc private func settingsTapped() {
