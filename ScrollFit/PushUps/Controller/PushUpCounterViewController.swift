@@ -7,10 +7,12 @@ import Vision
 
 final class PushUpCounterViewController: UIViewController {
 
-    // MARK: - Coordinator callback
+    // MARK: - Coordinator callbacks
 
-    /// WorkoutCoordinator подписывается на это замыкание для обработки завершения.
+    /// Пользователь нажал «Отмена» (0 отжиманий).
     var onCancel: (() -> Void)?
+    /// Пользователь нажал «Получить N мин.» — передаёт количество отжиманий.
+    var onFinish: ((Int) -> Void)?
 
     // MARK: - Dependencies
 
@@ -188,7 +190,7 @@ final class PushUpCounterViewController: UIViewController {
     // MARK: - Setup Actions
 
     private func setupActions() {
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(primaryButtonTapped), for: .touchUpInside)
     }
 
     // MARK: - Setup Services
@@ -239,12 +241,16 @@ final class PushUpCounterViewController: UIViewController {
 
     // MARK: - Actions
 
-    @objc private func cancelTapped() {
+    @objc private func primaryButtonTapped() {
+        let count = pushUpAnalyzer.repCount
         cameraManager.stop()
         pushUpAnalyzer.reset()
         poseSmoother.reset()
-        // Уведомляем координатор — он решает, как закрыть экран
-        onCancel?()
+        if count == 0 {
+            onCancel?()
+        } else {
+            onFinish?(count)
+        }
     }
 
     // MARK: - UI Update
@@ -252,10 +258,20 @@ final class PushUpCounterViewController: UIViewController {
     private func apply(_ result: PushUpAnalysisResult) {
         repCounterView.setCount(result.repCount)
         instructionBarView.setText(result.instructionText)
+        updatePrimaryButton(repCount: result.repCount)
 
         if result.didCompleteRep {
             repCounterView.animatePulse()
             audioFeedbackService.playRepCompleted()
+        }
+    }
+
+    private func updatePrimaryButton(repCount: Int) {
+        if repCount == 0 {
+            cancelButton.setTitle("Отмена", for: .normal)
+        } else {
+            let minutes = repCount * ActivityRepository.shared.scrollMinutesPerPushUp
+            cancelButton.setTitle("Получить \(minutes) мин.", for: .normal)
         }
     }
 

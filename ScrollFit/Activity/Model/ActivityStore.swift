@@ -9,4 +9,7 @@ struct ActivityStore: Codable {
     var records: [String: DayRecord] = [:]   // key = "yyyy-MM-dd"
     var currentStreak: Int = 0
     var bestStreak: Int = 0
+    var bestSingleSessionPushUps: Int = 0
+    var longestSessionMinutes: Int = 0
+    var scrollMinutesPerPushUp: Int = 1
 }

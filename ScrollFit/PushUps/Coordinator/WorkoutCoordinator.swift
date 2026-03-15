@@ -32,6 +32,11 @@ final class WorkoutCoordinator: Coordinator {
             guard let self else { return }
             self.delegate?.workoutCoordinatorDidFinish(self)
         }
+        vc.onFinish = { [weak self] pushUps in
+            guard let self else { return }
+            ActivityRepository.shared.recordSession(pushUps: pushUps)
+            self.delegate?.workoutCoordinatorDidFinish(self)
+        }
         navigationController.setViewControllers([vc], animated: false)
     }
 }

@@ -44,6 +44,9 @@ final class ActivityRepository {
     var todayKey: String { Self.dateKey(for: Date()) }
     var currentStreak: Int { store.currentStreak }
     var bestStreak: Int { store.bestStreak }
+    var bestSingleSessionPushUps: Int { store.bestSingleSessionPushUps }
+    var longestSessionMinutes: Int { store.longestSessionMinutes }
+    var scrollMinutesPerPushUp: Int { store.scrollMinutesPerPushUp }
 
     /// Запись текущего дня. Гарантированно не nil.
     func todayRecord() -> DayRecord {
@@ -84,6 +87,38 @@ final class ActivityRepository {
         recalculateStreaks()
         persist()
         return store.records[key]!
+    }
+
+    /// Зафиксировать завершённую сессию отжиманий. Прибавляет к сегодняшнему счётчику,
+    /// обновляет рекорд за одну сессию если побит.
+    func recordSession(pushUps: Int) {
+        ensureTodayRecord()
+        let key = todayKey
+        let clampedPushUps = max(0, pushUps)
+
+        store.records[key]!.pushUpsCount += clampedPushUps
+        store.records[key]!.earnedScrollMinutes += clampedPushUps * store.scrollMinutesPerPushUp
+
+        if clampedPushUps > store.bestSingleSessionPushUps {
+            store.bestSingleSessionPushUps = clampedPushUps
+        }
+
+        recalculateStreaks()
+        persist()
+    }
+
+    /// Обновить рекорд самой долгой сессии в приложении. Вызывать при уходе в фон.
+    func updateLongestSessionIfNeeded(minutes: Int) {
+        let clamped = max(0, minutes)
+        guard clamped > store.longestSessionMinutes else { return }
+        store.longestSessionMinutes = clamped
+        persist()
+    }
+
+    /// Изменить множитель: сколько минут скролла даёт одно отжимание. Минимум 1.
+    func setScrollMultiplier(_ value: Int) {
+        store.scrollMinutesPerPushUp = max(1, value)
+        persist()
     }
 
     /// Явная попытка редактировать произвольную дату — бросает для прошлых дней.
