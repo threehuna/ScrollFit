@@ -25,6 +25,7 @@ class OnboardingStepViewController: UIViewController {
 
     var showsBackButton: Bool  = false
     var showsProgressBar: Bool = false
+    var showsActionButton: Bool = true
     var stepProgress: Float    = 0
 
     // MARK: - UI
@@ -66,6 +67,7 @@ class OnboardingStepViewController: UIViewController {
     }
 
     private func setupActionButton() {
+        guard showsActionButton else { return }
         view.addSubview(actionButton)
         actionButton.setTitle(actionButtonTitle, for: .normal)
 

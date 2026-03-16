@@ -51,6 +51,11 @@ final class OnboardingCoordinator: Coordinator {
         containerViewController.pushViewController(vc, animated: true)
     }
 
+    func showScreenTimePermission() {
+        let vc = OnboardingFactory.makeScreenTimePermission(coordinator: self)
+        containerViewController.pushViewController(vc, animated: true)
+    }
+
     func showTimeReturn() {
         let vc = OnboardingFactory.makeTimeReturn(coordinator: self)
         containerViewController.pushViewController(vc, animated: true)

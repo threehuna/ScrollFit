@@ -84,6 +84,18 @@ enum OnboardingFactory {
     static func makeTimeReturn(coordinator: OnboardingCoordinator) -> OnboardingTimeReturnViewController {
         let vc = OnboardingTimeReturnViewController(userData: coordinator.userData)
         vc.onNext = { [weak coordinator] in
+            coordinator?.showScreenTimePermission()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makeScreenTimePermission(coordinator: OnboardingCoordinator) -> OnboardingScreenTimePermissionViewController {
+        let vc = OnboardingScreenTimePermissionViewController()
+        vc.onNext = { [weak coordinator] in
+            // TODO: запросить FamilyControls authorization перед переходом
             coordinator?.finish()
         }
         vc.onBack = { [weak coordinator] in
