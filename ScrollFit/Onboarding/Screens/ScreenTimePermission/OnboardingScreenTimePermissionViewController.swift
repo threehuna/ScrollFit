@@ -2,11 +2,21 @@
 // ScrollFit
 
 import UIKit
+import FamilyControls
 
 /// Экран 9: запрос разрешения на доступ к экранному времени.
 /// Показывает макет системного алёрта FamilyControls в том месте,
 /// где он реально появится. Стрелка указывает на кнопку «Продолжить» в алёрте.
+///
+/// Логика:
+/// - Через 1.5с после появления экрана показывается системный алёрт
+/// - Если пользователь нажал «Не разрешать» → через 3с алёрт повторяется
+/// - Если разрешил → переход на следующий экран
 final class OnboardingScreenTimePermissionViewController: OnboardingStepViewController {
+
+    // MARK: - State
+
+    private var authTask: Task<Void, Never>?
 
     // MARK: - UI
 
@@ -80,6 +90,73 @@ final class OnboardingScreenTimePermissionViewController: OnboardingStepViewCont
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 
+    private var didRequestOnce = false
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard !didRequestOnce else { return }
+        didRequestOnce = true
+
+        if AuthorizationCenter.shared.authorizationStatus == .approved {
+            onNext?()
+            return
+        }
+
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(appDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(appWillResignActive),
+            name: UIApplication.willResignActiveNotification, object: nil)
+
+        scheduleAuthorization(delay: 3.0)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        authTask?.cancel()
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func appWillResignActive() {
+        authTask?.cancel()
+    }
+
+    @objc private func appDidBecomeActive() {
+        if AuthorizationCenter.shared.authorizationStatus == .approved {
+            onNext?()
+        } else {
+            scheduleAuthorization(delay: 2.0)
+        }
+    }
+
+    // MARK: - Authorization
+
+    private func scheduleAuthorization(delay: TimeInterval) {
+        authTask?.cancel()
+        authTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            await requestAuthorization()
+        }
+    }
+
+    @MainActor
+    private func requestAuthorization() async {
+        #if targetEnvironment(simulator)
+        onNext?()
+        return
+        #else
+        do {
+            try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
+            onNext?()
+        } catch {
+            guard !(authTask?.isCancelled ?? true) else { return }
+            scheduleAuthorization(delay: 2.0)
+        }
+        #endif
+    }
+
     // MARK: - Setup
 
     private func setupContent() {
@@ -90,7 +167,7 @@ final class OnboardingScreenTimePermissionViewController: OnboardingStepViewCont
          arrowImageView, disclaimerLabel].forEach { view.addSubview($0) }
 
         // Ширина алёрта — фиксирована чтобы стрелка попадала точно под левую кнопку
-        let alertWidth: CGFloat = 300
+        let alertWidth: CGFloat = 280
 
         NSLayoutConstraint.activate([
             // Заголовок
@@ -109,7 +186,7 @@ final class OnboardingScreenTimePermissionViewController: OnboardingStepViewCont
             alertBorderView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             alertBorderView.widthAnchor.constraint(equalToConstant: alertWidth),
             alertBorderView.centerYAnchor.constraint(
-                equalTo: view.centerYAnchor, constant: 60),
+                equalTo: view.centerYAnchor, constant: 23),
 
             // Макет алёрта внутри рамки
             alertMockupView.topAnchor.constraint(
