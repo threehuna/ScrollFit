@@ -117,10 +117,18 @@ enum OnboardingFactory {
     static func makeJourney(coordinator: OnboardingCoordinator) -> OnboardingJourneyViewController {
         let vc = OnboardingJourneyViewController(userData: coordinator.userData)
         vc.onNext = { [weak coordinator] in
-            coordinator?.finish()
+            coordinator?.showFinal()
         }
         vc.onBack = { [weak coordinator] in
             coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makeFinal(coordinator: OnboardingCoordinator) -> OnboardingFinalViewController {
+        let vc = OnboardingFinalViewController()
+        vc.onNext = { [weak coordinator] in
+            coordinator?.finish()
         }
         return vc
     }
