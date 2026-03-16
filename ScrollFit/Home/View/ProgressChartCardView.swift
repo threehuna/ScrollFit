@@ -82,14 +82,14 @@ final class ProgressChartCardView: UIView {
             cardView.backgroundColor = UIColor(.scrollFitBlack).withAlphaComponent(0.77)
             layer.shadowColor        = UIColor(.scrollFitGreen).cgColor
             layer.borderColor = UIColor(.scrollFitGreen).cgColor
-            titleLabel.text          = "Экранное\nвремя"
-            let cfg                  = UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)
+            titleLabel.text          = "Экранное\nвремя на день"
+            let cfg                  = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
             iconView.image           = UIImage(systemName: "hourglass.and.lock", withConfiguration: cfg)
             iconView.tintColor       = .white
         }
 
         // Title
-        titleLabel.font          = UIFont(name: "Helvetica-Bold", size: 17) ?? .boldSystemFont(ofSize: 17)
+        titleLabel.font          = UIFont(name: "Helvetica-Bold", size: 15) ?? .boldSystemFont(ofSize: 15)
         titleLabel.textColor     = .white
         titleLabel.numberOfLines = 2
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -105,7 +105,7 @@ final class ProgressChartCardView: UIView {
         cardView.addSubview(ringView)
 
         // Value (крупное число)
-        valueLabel.font          = UIFont(name: "Helvetica-Bold", size: 22) ?? .boldSystemFont(ofSize: 22)
+        valueLabel.font          = UIFont(name: "Helvetica-Bold", size: 20) ?? .boldSystemFont(ofSize: 22)
         valueLabel.textColor     = .white
         valueLabel.textAlignment = .center
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -129,7 +129,7 @@ final class ProgressChartCardView: UIView {
             // Title — левый верхний угол
             titleLabel.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 14),
             titleLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            titleLabel.widthAnchor.constraint(equalToConstant: 100),
+            titleLabel.widthAnchor.constraint(equalToConstant: 110),
 
             // Icon — правый верхний угол
             iconView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 10),
