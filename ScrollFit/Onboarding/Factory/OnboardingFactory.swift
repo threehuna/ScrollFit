@@ -40,6 +40,17 @@ enum OnboardingFactory {
     static func makePushUpGoal(coordinator: OnboardingCoordinator) -> OnboardingPushUpGoalViewController {
         let vc = OnboardingPushUpGoalViewController(userData: coordinator.userData)
         vc.onNext = { [weak coordinator] in
+            coordinator?.showCurrentScreenTime()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makeCurrentScreenTime(coordinator: OnboardingCoordinator) -> OnboardingCurrentScreenTimeViewController {
+        let vc = OnboardingCurrentScreenTimeViewController(userData: coordinator.userData)
+        vc.onNext = { [weak coordinator] in
             coordinator?.finish()
         }
         vc.onBack = { [weak coordinator] in

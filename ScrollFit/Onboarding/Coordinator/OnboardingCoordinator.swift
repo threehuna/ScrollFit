@@ -46,6 +46,11 @@ final class OnboardingCoordinator: Coordinator {
         containerViewController.pushViewController(vc, animated: true)
     }
 
+    func showCurrentScreenTime() {
+        let vc = OnboardingFactory.makeCurrentScreenTime(coordinator: self)
+        containerViewController.pushViewController(vc, animated: true)
+    }
+
     func goBack() {
         containerViewController.popViewController(animated: true)
     }
