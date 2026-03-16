@@ -39,6 +39,11 @@ final class OnboardingCoordinator: Coordinator {
         navigationController.pushViewController(vc, animated: true)
     }
 
+    func showUsageLimit() {
+        let vc = OnboardingFactory.makeUsageLimit(coordinator: self)
+        navigationController.pushViewController(vc, animated: true)
+    }
+
     func finish() {
         UserDefaults.standard.set(true, forKey: OnboardingCoordinator.completedKey)
         delegate?.onboardingCoordinatorDidFinish(self)
