@@ -29,6 +29,17 @@ enum OnboardingFactory {
     static func makeUsageLimit(coordinator: OnboardingCoordinator) -> OnboardingUsageLimitViewController {
         let vc = OnboardingUsageLimitViewController(userData: coordinator.userData)
         vc.onNext = { [weak coordinator] in
+            coordinator?.showPushUpGoal()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makePushUpGoal(coordinator: OnboardingCoordinator) -> OnboardingPushUpGoalViewController {
+        let vc = OnboardingPushUpGoalViewController(userData: coordinator.userData)
+        vc.onNext = { [weak coordinator] in
             coordinator?.finish()
         }
         vc.onBack = { [weak coordinator] in

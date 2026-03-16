@@ -41,6 +41,11 @@ final class OnboardingCoordinator: Coordinator {
         containerViewController.pushViewController(vc, animated: true)
     }
 
+    func showPushUpGoal() {
+        let vc = OnboardingFactory.makePushUpGoal(coordinator: self)
+        containerViewController.pushViewController(vc, animated: true)
+    }
+
     func goBack() {
         containerViewController.popViewController(animated: true)
     }
