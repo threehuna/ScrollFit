@@ -25,11 +25,13 @@ final class PoseSmoother {
     var confidenceThreshold: Float = 0.1
 
     /// Кадров жизни после потери confidence.
-    /// При ~15fps = ~0.5s grace period с экстраполяцией скорости.
-    var staleFrameLimit: Int = 8
+    /// При ~15fps = ~1s grace period с экстраполяцией скорости.
+    /// Увеличено с 8 для удержания скелета в глубокой фазе отжимания.
+    var staleFrameLimit: Int = 15
 
     /// Затухание скорости за кадр при экстраполяции (0 = нет движения, 1 = без затухания).
-    var velocityDamping: Double = 0.65
+    /// 0.40: за 5 кадров скорость → ~1% от исходной — сустав «замирает» на месте.
+    var velocityDamping: Double = 0.40
 
     // MARK: - State
 
