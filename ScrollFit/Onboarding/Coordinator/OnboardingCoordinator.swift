@@ -56,6 +56,11 @@ final class OnboardingCoordinator: Coordinator {
         containerViewController.pushViewController(vc, animated: true)
     }
 
+    func showSelectApps() {
+        let vc = OnboardingFactory.makeSelectApps(coordinator: self)
+        containerViewController.pushViewController(vc, animated: true)
+    }
+
     func showTimeReturn() {
         let vc = OnboardingFactory.makeTimeReturn(coordinator: self)
         containerViewController.pushViewController(vc, animated: true)

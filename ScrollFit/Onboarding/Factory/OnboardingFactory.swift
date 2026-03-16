@@ -95,6 +95,17 @@ enum OnboardingFactory {
     static func makeScreenTimePermission(coordinator: OnboardingCoordinator) -> OnboardingScreenTimePermissionViewController {
         let vc = OnboardingScreenTimePermissionViewController()
         vc.onNext = { [weak coordinator] in
+            coordinator?.showSelectApps()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makeSelectApps(coordinator: OnboardingCoordinator) -> OnboardingSelectAppsViewController {
+        let vc = OnboardingSelectAppsViewController(userData: coordinator.userData)
+        vc.onNext = { [weak coordinator] in
             coordinator?.finish()
         }
         vc.onBack = { [weak coordinator] in

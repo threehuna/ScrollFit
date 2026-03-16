@@ -109,7 +109,7 @@ final class OnboardingScreenTimePermissionViewController: OnboardingStepViewCont
             self, selector: #selector(appWillResignActive),
             name: UIApplication.willResignActiveNotification, object: nil)
 
-        scheduleAuthorization(delay: 3.0)
+        scheduleAuthorization(delay: 2.0)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
