@@ -51,6 +51,11 @@ final class OnboardingCoordinator: Coordinator {
         containerViewController.pushViewController(vc, animated: true)
     }
 
+    func showTimeReturn() {
+        let vc = OnboardingFactory.makeTimeReturn(coordinator: self)
+        containerViewController.pushViewController(vc, animated: true)
+    }
+
     func showPhoneInfluence() {
         let vc = OnboardingFactory.makePhoneInfluence(coordinator: self)
         containerViewController.pushViewController(vc, animated: true)
@@ -59,6 +64,7 @@ final class OnboardingCoordinator: Coordinator {
     func showDesiredScreenTimeIfNeeded() {
         // Пропускаем экран если текущее время уже 1 час — некуда снижать
         guard userData.currentScreenTimeHours > 1 else {
+            userData.desiredScreenTimeHours = userData.currentScreenTimeHours
             showPhoneInfluence()
             return
         }

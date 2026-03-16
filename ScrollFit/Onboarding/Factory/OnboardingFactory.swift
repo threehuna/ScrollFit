@@ -73,6 +73,17 @@ enum OnboardingFactory {
     static func makePhoneInfluence(coordinator: OnboardingCoordinator) -> OnboardingPhoneInfluenceViewController {
         let vc = OnboardingPhoneInfluenceViewController(userData: coordinator.userData)
         vc.onNext = { [weak coordinator] in
+            coordinator?.showTimeReturn()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makeTimeReturn(coordinator: OnboardingCoordinator) -> OnboardingTimeReturnViewController {
+        let vc = OnboardingTimeReturnViewController(userData: coordinator.userData)
+        vc.onNext = { [weak coordinator] in
             coordinator?.finish()
         }
         vc.onBack = { [weak coordinator] in
