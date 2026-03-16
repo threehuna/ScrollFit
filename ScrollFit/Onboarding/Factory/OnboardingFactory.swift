@@ -106,6 +106,17 @@ enum OnboardingFactory {
     static func makeSelectApps(coordinator: OnboardingCoordinator) -> OnboardingSelectAppsViewController {
         let vc = OnboardingSelectAppsViewController(userData: coordinator.userData)
         vc.onNext = { [weak coordinator] in
+            coordinator?.showJourney()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makeJourney(coordinator: OnboardingCoordinator) -> OnboardingJourneyViewController {
+        let vc = OnboardingJourneyViewController(userData: coordinator.userData)
+        vc.onNext = { [weak coordinator] in
             coordinator?.finish()
         }
         vc.onBack = { [weak coordinator] in
