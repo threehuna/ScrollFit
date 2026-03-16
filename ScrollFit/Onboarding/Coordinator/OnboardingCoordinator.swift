@@ -97,6 +97,10 @@ final class OnboardingCoordinator: Coordinator {
     }
 
     func finish() {
+        UserGoalsRepository.shared.update(
+            pushUpsGoal: userData.pushUpGoal,
+            scrollMinutesGoal: userData.usageLimitMinutes
+        )
         UserDefaults.standard.set(true, forKey: OnboardingCoordinator.completedKey)
         delegate?.onboardingCoordinatorDidFinish(self)
     }
