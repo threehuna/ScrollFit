@@ -1,11 +1,12 @@
-// OnboardingCurrentScreenTimeViewController.swift
+// OnboardingDesiredScreenTimeViewController.swift
 // ScrollFit
 
 import UIKit
 
-/// Экран 5: текущее экранное время пользователя.
-/// Горизонтальный слайдер 1–16 часов, дефолт 8ч.
-final class OnboardingCurrentScreenTimeViewController: OnboardingStepViewController {
+/// Экран 6: желаемое экранное время.
+/// Горизонтальный слайдер 1…currentScreenTimeHours, дефолт min(5, currentScreenTimeHours - 1).
+/// Если на экране 5 выбран 1 час — этот экран пропускается координатором.
+final class OnboardingDesiredScreenTimeViewController: OnboardingStepViewController {
 
     // MARK: - Dependencies
 
@@ -15,7 +16,7 @@ final class OnboardingCurrentScreenTimeViewController: OnboardingStepViewControl
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Сколько времени ты проводишь в телефоне в день?"
+        label.text = "Сколько времени в телефоне ты хотел бы проводить?"
         label.font = UIFont(name: "Helvetica-Bold", size: 35)
                   ?? UIFont.systemFont(ofSize: 35, weight: .bold)
         label.textColor = .white
@@ -28,7 +29,7 @@ final class OnboardingCurrentScreenTimeViewController: OnboardingStepViewControl
         let label = UILabel()
         label.font = UIFont(name: "Helvetica-Bold", size: 40)
                   ?? UIFont.systemFont(ofSize: 40, weight: .bold)
-        label.textColor = UIColor(red: 0, green: 0.765, blue: 1, alpha: 1) // #00C3FF
+        label.textColor = UIColor(.scrollFitGreen)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -36,8 +37,7 @@ final class OnboardingCurrentScreenTimeViewController: OnboardingStepViewControl
 
     private let slider: OnboardingHorizontalSlider = {
         let s = OnboardingHorizontalSlider()
-        s.minimumValue = 1
-        s.maximumValue = 16
+        s.fillColor = UIColor(.scrollFitGreen)
         s.translatesAutoresizingMaskIntoConstraints = false
         return s
     }()
@@ -57,11 +57,17 @@ final class OnboardingCurrentScreenTimeViewController: OnboardingStepViewControl
         super.viewDidLoad()
         showsBackButton   = true
         showsProgressBar  = true
-        stepProgress      = 4.0 / 5.0
+        stepProgress      = 5.0 / 5.0
         actionButtonTitle = "Продолжить"
 
-        slider.setValue(userData.currentScreenTimeHours, animated: false)
+        slider.minimumValue = 1
+        slider.maximumValue = userData.currentScreenTimeHours
+
+        let clamped = max(1, userData.currentScreenTimeHours - Self.defaultReduction(for: userData.currentScreenTimeHours))
+        slider.setValue(clamped, animated: false)
+        userData.desiredScreenTimeHours = slider.value
         updateValueLabel(slider.value)
+
         slider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
 
         setupContent()
@@ -97,10 +103,24 @@ final class OnboardingCurrentScreenTimeViewController: OnboardingStepViewControl
 
     @objc private func sliderChanged() {
         updateValueLabel(slider.value)
-        userData.currentScreenTimeHours = slider.value
+        userData.desiredScreenTimeHours = slider.value
     }
 
     private func updateValueLabel(_ hours: Int) {
         valueLabel.text = "\(hours)ч"
+    }
+
+    // MARK: - Default reduction
+
+    private static func defaultReduction(for hours: Int) -> Int {
+        switch hours {
+        case 2:      return 0
+        case 3...5:  return 1
+        case 6...7:  return 2
+        case 8...10: return 3
+        case 11...12: return 4
+        case 13...15: return 5
+        default:     return 6  // 16
+        }
     }
 }

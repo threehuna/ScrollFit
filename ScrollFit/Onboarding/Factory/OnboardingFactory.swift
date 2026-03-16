@@ -51,6 +51,17 @@ enum OnboardingFactory {
     static func makeCurrentScreenTime(coordinator: OnboardingCoordinator) -> OnboardingCurrentScreenTimeViewController {
         let vc = OnboardingCurrentScreenTimeViewController(userData: coordinator.userData)
         vc.onNext = { [weak coordinator] in
+            coordinator?.showDesiredScreenTimeIfNeeded()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
+        }
+        return vc
+    }
+
+    static func makeDesiredScreenTime(coordinator: OnboardingCoordinator) -> OnboardingDesiredScreenTimeViewController {
+        let vc = OnboardingDesiredScreenTimeViewController(userData: coordinator.userData)
+        vc.onNext = { [weak coordinator] in
             coordinator?.finish()
         }
         vc.onBack = { [weak coordinator] in

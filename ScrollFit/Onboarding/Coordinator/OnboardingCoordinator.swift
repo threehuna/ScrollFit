@@ -51,6 +51,16 @@ final class OnboardingCoordinator: Coordinator {
         containerViewController.pushViewController(vc, animated: true)
     }
 
+    func showDesiredScreenTimeIfNeeded() {
+        // Пропускаем экран если текущее время уже 1 час — некуда снижать
+        guard userData.currentScreenTimeHours > 1 else {
+            finish()
+            return
+        }
+        let vc = OnboardingFactory.makeDesiredScreenTime(coordinator: self)
+        containerViewController.pushViewController(vc, animated: true)
+    }
+
     func goBack() {
         containerViewController.popViewController(animated: true)
     }

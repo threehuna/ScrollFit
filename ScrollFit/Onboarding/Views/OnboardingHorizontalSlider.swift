@@ -5,7 +5,7 @@ import UIKit
 
 /// Кастомный горизонтальный слайдер для онбординга.
 /// Трек: тёмный (#27272A), высота 31pt.
-/// Заливка: голубая (#00C3FF), высота 25pt.
+/// Заливка: задаётся через `fillColor`, высота 25pt.
 /// Thumb: белый pill 53×25pt, повёрнутый на 90° — визуально 25×53pt.
 final class OnboardingHorizontalSlider: UIControl {
 
@@ -15,6 +15,10 @@ final class OnboardingHorizontalSlider: UIControl {
     var maximumValue: Int = 16
 
     private(set) var value: Int = 8
+
+    var fillColor: UIColor = UIColor(red: 0, green: 0.765, blue: 1, alpha: 1) {
+        didSet { fillView.backgroundColor = fillColor }
+    }
 
     func setValue(_ newValue: Int, animated: Bool) {
         let clamped = max(minimumValue, min(maximumValue, newValue))
@@ -39,7 +43,7 @@ final class OnboardingHorizontalSlider: UIControl {
 
     private let fillView: UIView = {
         let v = UIView()
-        v.backgroundColor = UIColor(red: 0, green: 0.765, blue: 1, alpha: 1) // #00C3FF
+        v.backgroundColor = UIColor(red: 0, green: 0.765, blue: 1, alpha: 1) // default #00C3FF, overridable via fillColor
         v.layer.cornerRadius = 12.5
         v.isUserInteractionEnabled = false
         v.clipsToBounds = true
