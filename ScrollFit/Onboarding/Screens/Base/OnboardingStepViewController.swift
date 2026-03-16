@@ -7,13 +7,13 @@ import UIKit
 ///
 /// Предоставляет:
 /// - градиентный фон
-/// - кнопку «назад» (скрыта по умолчанию)
-/// - прогресс-бар справа от кнопки «назад» (скрыт по умолчанию)
 /// - зелёную pill-кнопку действия внизу
 ///
+/// Конфигурационные свойства (читаются контейнером):
+/// `showsBackButton`, `showsProgressBar`, `stepProgress`
+///
 /// Подклассы добавляют свой контент в `view` и при необходимости
-/// конфигурируют `showsBackButton`, `showsProgressBar`, `stepProgress`,
-/// `actionButtonTitle`.
+/// задают `actionButtonTitle`.
 class OnboardingStepViewController: UIViewController {
 
     // MARK: - Callbacks
@@ -21,27 +21,15 @@ class OnboardingStepViewController: UIViewController {
     var onNext: (() -> Void)?
     var onBack: (() -> Void)?
 
+    // MARK: - Config (читается OnboardingContainerViewController)
+
+    var showsBackButton: Bool  = false
+    var showsProgressBar: Bool = false
+    var stepProgress: Float    = 0
+
     // MARK: - UI
 
     private let gradientView = GradientBackgroundView()
-
-    private(set) lazy var backButton: UIButton = {
-        let btn = UIButton(type: .system)
-        let cfg = UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)
-        btn.setImage(UIImage(systemName: "chevron.left", withConfiguration: cfg), for: .normal)
-        btn.tintColor = .white
-        btn.isHidden  = true
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
-        return btn
-    }()
-
-    private(set) lazy var progressBarView: OnboardingProgressBarView = {
-        let v = OnboardingProgressBarView()
-        v.isHidden = true
-        v.translatesAutoresizingMaskIntoConstraints = false
-        return v
-    }()
 
     private(set) lazy var actionButton: UIButton = {
         let btn = UIButton(type: .system)
@@ -62,24 +50,11 @@ class OnboardingStepViewController: UIViewController {
         didSet { actionButton.setTitle(actionButtonTitle, for: .normal) }
     }
 
-    var showsBackButton: Bool = false {
-        didSet { backButton.isHidden = !showsBackButton }
-    }
-
-    var showsProgressBar: Bool = false {
-        didSet { progressBarView.isHidden = !showsProgressBar }
-    }
-
-    var stepProgress: Float = 0 {
-        didSet { progressBarView.progress = stepProgress }
-    }
-
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBackground()
-        setupTopBar()
         setupActionButton()
     }
 
@@ -88,23 +63,6 @@ class OnboardingStepViewController: UIViewController {
     private func setupBackground() {
         gradientView.frame = view.bounds
         view.insertSubview(gradientView, at: 0)
-    }
-
-    private func setupTopBar() {
-        view.addSubview(backButton)
-        view.addSubview(progressBarView)
-
-        NSLayoutConstraint.activate([
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44),
-
-            progressBarView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8),
-            progressBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            progressBarView.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
-            progressBarView.heightAnchor.constraint(equalToConstant: 8),
-        ])
     }
 
     private func setupActionButton() {
@@ -124,10 +82,5 @@ class OnboardingStepViewController: UIViewController {
     @objc private func actionTapped() {
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         onNext?()
-    }
-
-    @objc private func backTapped() {
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        onBack?()
     }
 }

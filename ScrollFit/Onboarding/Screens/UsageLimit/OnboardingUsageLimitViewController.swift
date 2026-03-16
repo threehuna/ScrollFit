@@ -107,7 +107,7 @@ final class OnboardingUsageLimitViewController: OnboardingStepViewController {
         NSLayoutConstraint.activate([
             // Заголовок
             titleLabel.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 57),
+                equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 63),
             titleLabel.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor, constant: 39),
             titleLabel.trailingAnchor.constraint(

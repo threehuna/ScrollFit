@@ -92,12 +92,12 @@ final class GoalOptionView: UIControl {
             return
         }
 
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseIn) {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
             self.backgroundView.backgroundColor = targetBg
             self.titleLabel.textColor           = targetTint
         }
-        UIView.transition(with: iconImageView, duration: 0.25,
-                          options: [.transitionCrossDissolve, .curveEaseIn]) {
+        UIView.transition(with: iconImageView, duration: 0.3,
+                          options: [.transitionCrossDissolve, .curveEaseInOut]) {
             self.iconImageView.tintColor = targetTint
         }
     }

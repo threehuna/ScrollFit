@@ -14,12 +14,9 @@ final class OnboardingCoordinator: Coordinator {
 
     let userData = OnboardingUserData()
 
-    private(set) lazy var navigationController: UINavigationController = {
-        let nav = OnboardingNavigationController()
-        nav.setNavigationBarHidden(true, animated: false)
-        nav.modalPresentationStyle = .fullScreen
-        return nav
-    }()
+    private(set) lazy var containerViewController = OnboardingContainerViewController()
+
+    var rootViewController: UIViewController { containerViewController }
 
     // MARK: - Coordinator
 
@@ -31,26 +28,26 @@ final class OnboardingCoordinator: Coordinator {
 
     func showWelcome() {
         let vc = OnboardingFactory.makeWelcome(coordinator: self)
-        navigationController.setViewControllers([vc], animated: false)
+        containerViewController.pushViewController(vc, animated: false)
     }
 
     func showGoals() {
         let vc = OnboardingFactory.makeGoals(coordinator: self)
-        navigationController.pushViewController(vc, animated: true)
+        containerViewController.pushViewController(vc, animated: true)
     }
 
     func showUsageLimit() {
         let vc = OnboardingFactory.makeUsageLimit(coordinator: self)
-        navigationController.pushViewController(vc, animated: true)
+        containerViewController.pushViewController(vc, animated: true)
+    }
+
+    func goBack() {
+        containerViewController.popViewController(animated: true)
     }
 
     func finish() {
         UserDefaults.standard.set(true, forKey: OnboardingCoordinator.completedKey)
         delegate?.onboardingCoordinatorDidFinish(self)
-    }
-
-    func goBack() {
-        navigationController.popViewController(animated: true)
     }
 
     // MARK: - Helpers
@@ -60,10 +57,4 @@ final class OnboardingCoordinator: Coordinator {
     static var isCompleted: Bool {
         UserDefaults.standard.bool(forKey: completedKey)
     }
-}
-
-// MARK: - Private navigation controller
-
-private final class OnboardingNavigationController: UINavigationController {
-    override var childForStatusBarStyle: UIViewController? { topViewController }
 }

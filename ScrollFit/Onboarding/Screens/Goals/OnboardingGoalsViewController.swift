@@ -16,8 +16,8 @@ final class OnboardingGoalsViewController: OnboardingStepViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Каких целей ты хочешь достичь?"
-        label.font = UIFont(name: "Helvetica-Bold", size: 37)
-                  ?? UIFont.systemFont(ofSize: 37, weight: .bold)
+        label.font = UIFont(name: "Helvetica-Bold", size: 40)
+                  ?? UIFont.systemFont(ofSize: 40, weight: .bold)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false

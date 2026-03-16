@@ -32,7 +32,7 @@ final class AppCoordinator: Coordinator {
         coordinator.delegate = self
         addChild(coordinator)
         coordinator.start()
-        window.rootViewController = coordinator.navigationController
+        window.rootViewController = coordinator.rootViewController
         window.makeKeyAndVisible()
     }
 
