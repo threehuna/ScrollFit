@@ -112,8 +112,8 @@ class OnboardingStepViewController: UIViewController {
         actionButton.setTitle(actionButtonTitle, for: .normal)
 
         NSLayoutConstraint.activate([
-            actionButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            actionButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.widthAnchor.constraint(equalToConstant: 375),
             actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             actionButton.heightAnchor.constraint(equalToConstant: 62),
         ])
@@ -121,6 +121,13 @@ class OnboardingStepViewController: UIViewController {
 
     // MARK: - Actions
 
-    @objc private func actionTapped() { onNext?() }
-    @objc private func backTapped()   { onBack?() }
+    @objc private func actionTapped() {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        onNext?()
+    }
+
+    @objc private func backTapped() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        onBack?()
+    }
 }

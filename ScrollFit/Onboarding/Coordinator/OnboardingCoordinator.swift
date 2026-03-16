@@ -34,6 +34,11 @@ final class OnboardingCoordinator: Coordinator {
         navigationController.setViewControllers([vc], animated: false)
     }
 
+    func showGoals() {
+        let vc = OnboardingFactory.makeGoals(coordinator: self)
+        navigationController.pushViewController(vc, animated: true)
+    }
+
     func finish() {
         UserDefaults.standard.set(true, forKey: OnboardingCoordinator.completedKey)
         delegate?.onboardingCoordinatorDidFinish(self)

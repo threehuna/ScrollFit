@@ -10,7 +10,18 @@ enum OnboardingFactory {
     static func makeWelcome(coordinator: OnboardingCoordinator) -> OnboardingWelcomeViewController {
         let vc = OnboardingWelcomeViewController()
         vc.onNext = { [weak coordinator] in
+            coordinator?.showGoals()
+        }
+        return vc
+    }
+
+    static func makeGoals(coordinator: OnboardingCoordinator) -> OnboardingGoalsViewController {
+        let vc = OnboardingGoalsViewController(userData: coordinator.userData)
+        vc.onNext = { [weak coordinator] in
             coordinator?.finish()
+        }
+        vc.onBack = { [weak coordinator] in
+            coordinator?.goBack()
         }
         return vc
     }
