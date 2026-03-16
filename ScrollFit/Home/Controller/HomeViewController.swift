@@ -75,6 +75,13 @@ final class HomeViewController: UIViewController {
 
     private var weekViews: [WeekCalendarView] = []
 
+    // Screen time badge
+    private let screenTimeBadgeView: ScreenTimeBadgeView = {
+        let v = ScreenTimeBadgeView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+
     // Charts
     private let pushUpsCard: ProgressChartCardView = {
         let v = ProgressChartCardView(type: .pushUps)
@@ -131,6 +138,7 @@ final class HomeViewController: UIViewController {
         buildWeekViews()
         view.addSubview(screenTimeCard)
         view.addSubview(pushUpsCard)
+        view.addSubview(screenTimeBadgeView)
     }
 
     private func setupLayout() {
@@ -183,6 +191,12 @@ final class HomeViewController: UIViewController {
             pushUpsCard.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             pushUpsCard.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.44),
             pushUpsCard.heightAnchor.constraint(equalToConstant: 216),
+
+            // Бадж экранного времени — под диаграммами
+            screenTimeBadgeView.topAnchor.constraint(equalTo: pushUpsCard.bottomAnchor, constant: 20),
+            screenTimeBadgeView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            screenTimeBadgeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            screenTimeBadgeView.heightAnchor.constraint(equalToConstant: 100),
         ])
     }
 
@@ -241,9 +255,15 @@ final class HomeViewController: UIViewController {
     // MARK: - Data
 
     private func loadData() {
-        streakBadgeView.configure(streak: ActivityRepository.shared.currentStreak)
+        let repo = ActivityRepository.shared
+        streakBadgeView.configure(streak: repo.currentStreak)
         reloadCalendar()
         reloadCharts(for: selectedDate)
+
+        let available = repo.allRecords().reduce(0) {
+            $0 + $1.earnedScrollMinutes - $1.spentScrollMinutes
+        }
+        screenTimeBadgeView.configure(availableMinutes: max(0, available))
     }
 
     private func reloadCharts(for date: Date) {

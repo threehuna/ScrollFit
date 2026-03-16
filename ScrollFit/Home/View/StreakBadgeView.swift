@@ -27,12 +27,12 @@ final class StreakBadgeView: UIView {
 
     private let titleLabel: UILabel = {
         let l = UILabel()
-        l.text = "Дней подряд"
         l.textColor = UIColor(.scrollFitWhite)
         l.font = UIFont(name: "Helvetica", size: 25) ?? UIFont.systemFont(ofSize: 25)
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
+    
 
     // MARK: - Init
 
@@ -47,9 +47,21 @@ final class StreakBadgeView: UIView {
 
     func configure(streak: Int) {
         countLabel.text = "\(streak)"
+        titleLabel.text = dayTextForBadge(streak)
     }
 
     // MARK: - Private
+    
+    private func dayTextForBadge(_ streak: Int) -> String {
+        switch streak{
+            case 1:
+            return "день"
+            case 2..<5:
+            return "дня"
+        default:
+            return "дней"
+        }
+    }
 
     private func setup() {
         
