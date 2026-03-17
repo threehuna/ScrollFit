@@ -18,6 +18,7 @@ final class HomeCoordinator: Coordinator {
 
     private(set) lazy var navigationController: UINavigationController = {
         let nav = UINavigationController()
+        nav.view.backgroundColor = UIColor(.scrollFitBlack)
         nav.tabBarItem = UITabBarItem(
             title: "Главный",
             image: UIImage(systemName: "house"),
