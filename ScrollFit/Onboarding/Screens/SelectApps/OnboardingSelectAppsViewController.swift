@@ -92,6 +92,9 @@ final class OnboardingSelectAppsViewController: OnboardingStepViewController {
             onDone: { [weak self] selection in
                 guard let self else { return }
                 self.userData.selectedApps = selection
+                // Применить блокировку сразу после выбора
+                BlockedAppsRepository.shared.save(selection)
+                AppBlockingManager.shared.applyBlocking(for: selection)
                 self.dismiss(animated: true) {
                     self.onNext?()
                 }

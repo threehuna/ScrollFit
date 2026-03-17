@@ -2,6 +2,8 @@
 // ScrollFit
 
 import UIKit
+import SwiftUI
+import FamilyControls
 
 final class HomeViewController: UIViewController {
 
@@ -95,6 +97,88 @@ final class HomeViewController: UIViewController {
         return v
     }()
 
+    // Blocked apps button
+    private let blockedAppsButton: UIView = {
+        let container = UIView()
+        container.layer.borderColor = UIColor.white.cgColor
+        container.layer.borderWidth = 3
+        container.layer.cornerRadius = 40
+        container.clipsToBounds = true
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        // Левая часть: заголовок + подзаголовок
+        let headerLabel = UILabel()
+        headerLabel.text = "БЛОКИРОВКА"
+        headerLabel.font = UIFont(name: "Helvetica", size: 11)
+                        ?? UIFont.systemFont(ofSize: 11, weight: .regular)
+        headerLabel.textColor = .white
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(headerLabel)
+
+        let selectLabel = UILabel()
+        selectLabel.text = "Выбрать"
+        selectLabel.font = UIFont(name: "Helvetica-Bold", size: 20)
+                        ?? UIFont.systemFont(ofSize: 20, weight: .bold)
+        selectLabel.textColor = .white
+        selectLabel.translatesAutoresizingMaskIntoConstraints = false
+        selectLabel.tag = 101
+        container.addSubview(selectLabel)
+
+        // Контейнер для иконок приложений (будет заполнен SwiftUI)
+        let iconsContainer = UIView()
+        iconsContainer.translatesAutoresizingMaskIntoConstraints = false
+        iconsContainer.tag = 102
+        container.addSubview(iconsContainer)
+
+        // Бадж статуса справа
+        let statusBadge = UIView()
+        statusBadge.layer.cornerRadius = 14
+        statusBadge.translatesAutoresizingMaskIntoConstraints = false
+        statusBadge.tag = 103
+        container.addSubview(statusBadge)
+
+        let statusDot = UIView()
+        statusDot.layer.cornerRadius = 4
+        statusDot.translatesAutoresizingMaskIntoConstraints = false
+        statusDot.tag = 104
+        statusBadge.addSubview(statusDot)
+
+        let statusLabel = UILabel()
+        statusLabel.font = UIFont(name: "Helvetica-Bold", size: 11)
+                        ?? UIFont.systemFont(ofSize: 11, weight: .bold)
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        statusLabel.tag = 105
+        statusBadge.addSubview(statusLabel)
+
+        NSLayoutConstraint.activate([
+            headerLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
+            headerLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 14),
+
+            selectLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
+            selectLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 2),
+
+            iconsContainer.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            iconsContainer.leadingAnchor.constraint(equalTo: selectLabel.trailingAnchor, constant: 12),
+            iconsContainer.heightAnchor.constraint(equalToConstant: 32),
+            iconsContainer.widthAnchor.constraint(equalToConstant: 140),
+
+            statusBadge.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
+            statusBadge.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            statusBadge.heightAnchor.constraint(equalToConstant: 28),
+
+            statusDot.leadingAnchor.constraint(equalTo: statusBadge.leadingAnchor, constant: 10),
+            statusDot.centerYAnchor.constraint(equalTo: statusBadge.centerYAnchor),
+            statusDot.widthAnchor.constraint(equalToConstant: 8),
+            statusDot.heightAnchor.constraint(equalToConstant: 8),
+
+            statusLabel.leadingAnchor.constraint(equalTo: statusDot.trailingAnchor, constant: 6),
+            statusLabel.trailingAnchor.constraint(equalTo: statusBadge.trailingAnchor, constant: -10),
+            statusLabel.centerYAnchor.constraint(equalTo: statusBadge.centerYAnchor),
+        ])
+
+        return container
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -139,6 +223,7 @@ final class HomeViewController: UIViewController {
         view.addSubview(screenTimeCard)
         view.addSubview(pushUpsCard)
         view.addSubview(screenTimeBadgeView)
+        view.addSubview(blockedAppsButton)
     }
 
     private func setupLayout() {
@@ -197,6 +282,12 @@ final class HomeViewController: UIViewController {
             screenTimeBadgeView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             screenTimeBadgeView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             screenTimeBadgeView.heightAnchor.constraint(equalToConstant: 100),
+
+            // Кнопка блокировки
+            blockedAppsButton.topAnchor.constraint(equalTo: screenTimeBadgeView.bottomAnchor, constant: 16),
+            blockedAppsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            blockedAppsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            blockedAppsButton.heightAnchor.constraint(equalToConstant: 80),
         ])
     }
 
@@ -206,6 +297,9 @@ final class HomeViewController: UIViewController {
 
     private func setupActions() {
         settingsButton.addTarget(self, action: #selector(settingsTapped), for: .touchUpInside)
+        blockedAppsButton.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(blockedAppsTapped))
+        )
     }
 
     // MARK: - Calendar construction
@@ -264,6 +358,7 @@ final class HomeViewController: UIViewController {
             $0 + $1.earnedScrollMinutes - $1.spentScrollMinutes
         }
         screenTimeBadgeView.configure(availableMinutes: max(0, available))
+        updateBlockedAppsLabel()
     }
 
     private func reloadCharts(for date: Date) {
@@ -312,5 +407,104 @@ final class HomeViewController: UIViewController {
 
     @objc private func settingsTapped() {
         coordinator?.showSettings()
+    }
+
+    @objc private func blockedAppsTapped() {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
+        #if targetEnvironment(simulator)
+        return
+        #else
+        var selection = BlockedAppsRepository.shared.load()
+
+        let picker = FamilyActivityPicker(selection: Binding(
+            get: { selection },
+            set: { selection = $0 }
+        ))
+
+        let wrapped = picker
+            .navigationTitle("Приложения")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Отмена") { [weak self] in
+                        self?.dismiss(animated: true)
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Готово") { [weak self] in
+                        BlockedAppsRepository.shared.save(selection)
+                        AppBlockingManager.shared.applyBlocking(for: selection)
+                        self?.dismiss(animated: true) {
+                            self?.updateBlockedAppsLabel()
+                        }
+                    }
+                }
+            }
+
+        let hosting = UIHostingController(rootView: NavigationView { wrapped })
+        hosting.modalPresentationStyle = .pageSheet
+        present(hosting, animated: true)
+        #endif
+    }
+
+    private var iconsHostingController: UIHostingController<BlockedAppsIconsView>?
+
+    private func updateBlockedAppsLabel() {
+        let selection = BlockedAppsRepository.shared.load()
+        let count = selection.applicationTokens.count + selection.categoryTokens.count
+        let hasBlocking = count > 0
+
+        // Обновить текст «Выбрать» / «N прил.»
+        let selectLabel = blockedAppsButton.viewWithTag(101) as? UILabel
+        selectLabel?.text = hasBlocking ? "\(count) прил." : "Выбрать"
+
+        // Обновить статус-бадж
+        let statusBadge = blockedAppsButton.viewWithTag(103)
+        let statusDot   = blockedAppsButton.viewWithTag(104)
+        let statusLabel = blockedAppsButton.viewWithTag(105) as? UILabel
+
+        let activeColor = UIColor(red: 0.196, green: 0.78, blue: 0.35, alpha: 1)
+        let inactiveColor = UIColor(white: 0.45, alpha: 1)
+
+        if hasBlocking {
+            statusBadge?.backgroundColor = activeColor.withAlphaComponent(0.15)
+            statusDot?.backgroundColor = activeColor
+            statusLabel?.text = "АКТИВНО"
+            statusLabel?.textColor = activeColor
+        } else {
+            statusBadge?.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+            statusDot?.backgroundColor = inactiveColor
+            statusLabel?.text = "НЕАКТИВНО"
+            statusLabel?.textColor = inactiveColor
+        }
+
+        // Обновить иконки приложений
+        updateAppIcons(selection: selection)
+    }
+
+    private func updateAppIcons(selection: FamilyActivitySelection) {
+        guard let iconsContainer = blockedAppsButton.viewWithTag(102) else { return }
+
+        let hasIcons = !selection.applicationTokens.isEmpty || !selection.categoryTokens.isEmpty
+
+        if let existing = iconsHostingController {
+            existing.rootView = BlockedAppsIconsView(selection: selection)
+            existing.view.invalidateIntrinsicContentSize()
+        } else if hasIcons {
+            let hosting = UIHostingController(rootView: BlockedAppsIconsView(selection: selection))
+            hosting.view.translatesAutoresizingMaskIntoConstraints = false
+            hosting.view.backgroundColor = .clear
+            addChild(hosting)
+            iconsContainer.addSubview(hosting.view)
+            NSLayoutConstraint.activate([
+                hosting.view.topAnchor.constraint(equalTo: iconsContainer.topAnchor),
+                hosting.view.bottomAnchor.constraint(equalTo: iconsContainer.bottomAnchor),
+                hosting.view.leadingAnchor.constraint(equalTo: iconsContainer.leadingAnchor),
+                hosting.view.trailingAnchor.constraint(equalTo: iconsContainer.trailingAnchor),
+            ])
+            hosting.didMove(toParent: self)
+            iconsHostingController = hosting
+        }
     }
 }

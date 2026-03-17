@@ -101,6 +101,7 @@ final class OnboardingCoordinator: Coordinator {
             pushUpsGoal: userData.pushUpGoal,
             scrollMinutesGoal: userData.usageLimitMinutes
         )
+
         UserDefaults.standard.set(true, forKey: OnboardingCoordinator.completedKey)
         delegate?.onboardingCoordinatorDidFinish(self)
     }
