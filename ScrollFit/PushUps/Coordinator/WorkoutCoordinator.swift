@@ -34,6 +34,7 @@ final class WorkoutCoordinator: Coordinator {
         }
         vc.onFinish = { [weak self] pushUps in
             guard let self else { return }
+            let earned = pushUps * ActivityRepository.shared.scrollMinutesPerPushUp
             ActivityRepository.shared.recordSession(pushUps: pushUps)
 
             // Если есть заблокированные приложения и доступные минуты —
@@ -49,7 +50,7 @@ final class WorkoutCoordinator: Coordinator {
                 }
             }
 
-            self.delegate?.workoutCoordinatorDidFinish(self)
+            self.showResult(earnedMinutes: earned)
         }
         navigationController.setViewControllers([vc], animated: false)
     }
