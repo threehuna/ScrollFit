@@ -152,7 +152,7 @@ final class HomeViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             headerLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
-            headerLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 14),
+            headerLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 24),
 
             selectLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
             selectLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 2),

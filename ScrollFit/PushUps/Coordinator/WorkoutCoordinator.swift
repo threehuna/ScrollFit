@@ -53,4 +53,13 @@ final class WorkoutCoordinator: Coordinator {
         }
         navigationController.setViewControllers([vc], animated: false)
     }
+
+    private func showResult(earnedMinutes: Int) {
+        let vc = WorkoutResultViewController(earnedMinutes: earnedMinutes)
+        vc.onClaim = { [weak self] in
+            guard let self else { return }
+            self.delegate?.workoutCoordinatorDidFinish(self)
+        }
+        navigationController.pushViewController(vc, animated: true)
+    }
 }
