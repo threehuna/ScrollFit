@@ -16,8 +16,8 @@ final class OnboardingCurrentScreenTimeViewController: OnboardingStepViewControl
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Сколько времени ты проводишь в телефоне в день?"
-        label.font = UIFont(name: "Helvetica-Bold", size: 35)
-                  ?? UIFont.systemFont(ofSize: 35, weight: .bold)
+        label.font = UIFont(name: "Helvetica-Bold", size: 30)
+                  ?? UIFont.systemFont(ofSize: 30, weight: .bold)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false

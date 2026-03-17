@@ -229,7 +229,7 @@ final class HomeViewController: UIViewController {
     private func setupLayout() {
         NSLayoutConstraint.activate([
             // Лого
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             logoImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 96),
             logoImageView.widthAnchor.constraint(equalToConstant: 42),
             logoImageView.heightAnchor.constraint(equalToConstant: 42),

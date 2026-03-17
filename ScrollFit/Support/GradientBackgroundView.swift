@@ -23,6 +23,11 @@ final class GradientBackgroundView: UIView {
 
     required init?(coder: NSCoder) { fatalError() }
 
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        superview?.backgroundColor = UIColor(.scrollFitBlack)
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer.frame = bounds

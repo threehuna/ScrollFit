@@ -28,6 +28,7 @@ final class TabBarCoordinator: Coordinator {
     func start() {
         let homeCoordinator = HomeCoordinator()
         homeCoordinator.workoutDelegate = self
+        homeCoordinator.mainTabBarController = tabBarController
         addChild(homeCoordinator)
         homeCoordinator.start()
 

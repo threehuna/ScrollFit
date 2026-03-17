@@ -42,6 +42,18 @@ final class MainTabBarController: UITabBarController {
         }
     }
 
+    // MARK: - Tab Bar Visibility
+
+    func setCustomTabBarHidden(_ hidden: Bool, animated: Bool = true) {
+        let duration = animated ? 0.3 : 0
+        UIView.animate(withDuration: duration) {
+            self.customTabBar.alpha = hidden ? 0 : 1
+            self.customTabBar.transform = hidden ? CGAffineTransform(translationX: 0, y: 100) : .identity
+            self.additionalSafeAreaInsets.bottom = hidden ? 0 : 74
+            self.view.layoutIfNeeded()
+        }
+    }
+
     // MARK: - Tab switching
 
     override var selectedIndex: Int {

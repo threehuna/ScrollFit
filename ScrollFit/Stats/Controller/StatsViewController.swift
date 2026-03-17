@@ -61,34 +61,44 @@ final class StatsViewController: UIViewController {
 
     private func setupHierarchy() {
         view.insertSubview(gradientView, at: 0)
+        view.addSubview(titleLabel)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
 
-        [titleLabel, sectionLabel, makeGrid(), progressView].forEach { contentView.addSubview($0) }
+        makeGrid()
+
+        contentView.addSubview(sectionLabel)
+        contentView.addSubview(gridStack)
+        contentView.addSubview(progressView)
     }
 
     private func setupLayout() {
-        gradientView.frame = view.bounds
-
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            gradientView.topAnchor.constraint(equalTo: view.topAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            scrollView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
 
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
-            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-
-            sectionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            sectionLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             sectionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 19),
 
             gridStack.topAnchor.constraint(equalTo: sectionLabel.bottomAnchor, constant: 16),
@@ -121,25 +131,28 @@ final class StatsViewController: UIViewController {
 
     private lazy var gridStack: UIStackView = UIStackView()
 
-    @discardableResult
-    private func makeGrid() -> UIStackView {
+    
+    private func makeGrid() {
+        gridStack.arrangedSubviews.forEach {
+            gridStack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
         let topRow = UIStackView(arrangedSubviews: [card1, card2])
-        topRow.spacing     = 10
+        topRow.spacing = 10
         topRow.distribution = .fillEqually
         topRow.heightAnchor.constraint(equalToConstant: 149).isActive = true
 
         let bottomRow = UIStackView(arrangedSubviews: [card3, card4])
-        bottomRow.spacing      = 10
+        bottomRow.spacing = 10
         bottomRow.distribution = .fillEqually
         bottomRow.heightAnchor.constraint(equalToConstant: 149).isActive = true
 
-        gridStack.axis         = .vertical
-        gridStack.spacing      = 10
+        gridStack.axis = .vertical
+        gridStack.spacing = 10
         gridStack.translatesAutoresizingMaskIntoConstraints = false
         gridStack.addArrangedSubview(topRow)
         gridStack.addArrangedSubview(bottomRow)
-
-        return gridStack
     }
 
     // MARK: - Data
