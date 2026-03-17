@@ -284,7 +284,7 @@ final class HomeViewController: UIViewController {
             screenTimeBadgeView.heightAnchor.constraint(equalToConstant: 100),
 
             // Кнопка блокировки
-            blockedAppsButton.topAnchor.constraint(equalTo: screenTimeBadgeView.bottomAnchor, constant: 16),
+            blockedAppsButton.topAnchor.constraint(equalTo: screenTimeBadgeView.bottomAnchor, constant: 24),
             blockedAppsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             blockedAppsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             blockedAppsButton.heightAnchor.constraint(equalToConstant: 80),
