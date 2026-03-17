@@ -73,7 +73,7 @@ class OnboardingStepViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.widthAnchor.constraint(equalToConstant: 375),
+            actionButton.widthAnchor.constraint(equalToConstant: 355),
             actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             actionButton.heightAnchor.constraint(equalToConstant: 62),
         ])

@@ -14,6 +14,7 @@ final class HomeCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
 
     weak var workoutDelegate: HomeCoordinatorWorkoutDelegate?
+    weak var mainTabBarController: MainTabBarController?
 
     private(set) lazy var navigationController: UINavigationController = {
         let nav = UINavigationController()
@@ -36,6 +37,19 @@ final class HomeCoordinator: Coordinator {
     func showSettings() {
         let vc = SettingsViewController()
         vc.coordinator = self
+        vc.mainTabBarController = mainTabBarController
+        navigationController.pushViewController(vc, animated: true)
+    }
+
+    func showPushUpGoal() {
+        let vc = SettingsPushUpGoalViewController()
+        vc.mainTabBarController = mainTabBarController
+        navigationController.pushViewController(vc, animated: true)
+    }
+
+    func showUsageLimit() {
+        let vc = SettingsUsageLimitViewController()
+        vc.mainTabBarController = mainTabBarController
         navigationController.pushViewController(vc, animated: true)
     }
 

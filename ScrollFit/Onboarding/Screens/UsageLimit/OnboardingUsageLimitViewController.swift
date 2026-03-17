@@ -16,8 +16,8 @@ final class OnboardingUsageLimitViewController: OnboardingStepViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Установи лимит\nпо пользованию"
-        label.font = UIFont(name: "Helvetica-Bold", size: 40)
-                  ?? UIFont.systemFont(ofSize: 40, weight: .bold)
+        label.font = UIFont(name: "Helvetica-Bold", size: 35)
+                  ?? UIFont.systemFont(ofSize: 35, weight: .bold)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -27,8 +27,8 @@ final class OnboardingUsageLimitViewController: OnboardingStepViewController {
     private let subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Какое максимальное количество минут в день ты хочешь тратить на приложение с ограничением по времени?"
-        label.font = UIFont(name: "Helvetica", size: 18)
-                  ?? UIFont.systemFont(ofSize: 18, weight: .regular)
+        label.font = UIFont(name: "Helvetica", size: 15)
+                  ?? UIFont.systemFont(ofSize: 15, weight: .regular)
         label.textColor = UIColor(white: 0.73, alpha: 1)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
