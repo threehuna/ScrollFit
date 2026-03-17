@@ -63,6 +63,14 @@ final class ActivityRepository {
         store.records.values.sorted { $0.date > $1.date }
     }
 
+    /// Суммарный баланс доступных минут (заработано - потрачено за все дни).
+    var availableMinutes: Int {
+        let total = store.records.values.reduce(0) {
+            $0 + $1.earnedScrollMinutes - $1.spentScrollMinutes
+        }
+        return max(0, total)
+    }
+
     /// Можно ли редактировать запись с данным ключом?
     func canEdit(dateKey: String) -> Bool {
         dateKey == todayKey

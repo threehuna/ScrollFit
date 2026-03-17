@@ -35,6 +35,20 @@ final class WorkoutCoordinator: Coordinator {
         vc.onFinish = { [weak self] pushUps in
             guard let self else { return }
             ActivityRepository.shared.recordSession(pushUps: pushUps)
+
+            // Если есть заблокированные приложения и доступные минуты —
+            // снять блокировку и запустить мониторинг
+            if BlockedAppsRepository.shared.hasSelection {
+                let selection = BlockedAppsRepository.shared.load()
+                let available = ActivityRepository.shared.availableMinutes
+                if available > 0 {
+                    AppBlockingManager.shared.grantAccessAndStartMonitoring(
+                        availableMinutes: available,
+                        selection: selection
+                    )
+                }
+            }
+
             self.delegate?.workoutCoordinatorDidFinish(self)
         }
         navigationController.setViewControllers([vc], animated: false)

@@ -13,10 +13,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Синхронизировать потраченные минуты из расширения мониторинга
+        let monitorSpent = ScreenTimeMonitoringState.spentMinutesToday
+        let current = ActivityRepository.shared.todayRecord().spentScrollMinutes
+        if monitorSpent > current {
+            ActivityRepository.shared.updateToday(spentScrollMinutes: monitorSpent)
+        }
+
         // Восстановить блокировку приложений при запуске
         if BlockedAppsRepository.shared.hasSelection {
             let selection = BlockedAppsRepository.shared.load()
-            AppBlockingManager.shared.applyBlocking(for: selection)
+            let available = ActivityRepository.shared.availableMinutes
+
+            if available > 0 {
+                // Есть доступные минуты — снять блокировку и запустить мониторинг
+                AppBlockingManager.shared.grantAccessAndStartMonitoring(
+                    availableMinutes: available,
+                    selection: selection
+                )
+            } else {
+                // Минут нет — убедиться что блокировка активна
+                AppBlockingManager.shared.applyBlocking(for: selection)
+            }
         }
         return true
     }

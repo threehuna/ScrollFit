@@ -36,19 +36,35 @@ final class ProgressChartCardView: UIView {
 
     /// current — фактическое значение за день, goal — цель
     func configure(current: Int, goal: Int) {
-        let remaining = max(0, goal - current)
-        valueLabel.text = "\(remaining)"
-
         switch type {
         case .pushUps:
+            let remaining = max(0, goal - current)
+            valueLabel.text = "\(remaining)"
             unitLabel.text  = "повт. осталось"
+            valueLabel.textColor = .white
+            ringView.progressColor = .white
             ringView.progress = goal > 0 ? CGFloat(current) / CGFloat(goal) : 0
 
         case .screenTime:
-            unitLabel.text  = "мин осталось"
-            let spent       = current
-            let fraction    = goal > 0 ? CGFloat(max(0, goal - spent)) / CGFloat(goal) : 1
-            ringView.progress = fraction
+            let spent = current
+            let exceeded = spent > goal && goal > 0
+
+            if exceeded {
+                let over = spent - goal
+                valueLabel.text = "+\(over)"
+                unitLabel.text  = "мин сверх\nлимита"
+                valueLabel.textColor = UIColor(.scrollFitRed)
+                ringView.progressColor = UIColor(.scrollFitRed)
+                ringView.progress = 0
+            } else {
+                let remaining = max(0, goal - spent)
+                valueLabel.text = "\(remaining)"
+                unitLabel.text  = "мин осталось"
+                valueLabel.textColor = .white
+                ringView.progressColor = .white
+                let fraction = goal > 0 ? CGFloat(max(0, goal - spent)) / CGFloat(goal) : 1
+                ringView.progress = fraction
+            }
         }
     }
 

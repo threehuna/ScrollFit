@@ -350,15 +350,26 @@ final class HomeViewController: UIViewController {
 
     private func loadData() {
         let repo = ActivityRepository.shared
+
+        // Синхронизировать потраченные минуты из App Group (обновляет расширение)
+        syncSpentMinutesFromMonitor()
+
         streakBadgeView.configure(streak: repo.currentStreak)
         reloadCalendar()
         reloadCharts(for: selectedDate)
 
-        let available = repo.allRecords().reduce(0) {
-            $0 + $1.earnedScrollMinutes - $1.spentScrollMinutes
-        }
-        screenTimeBadgeView.configure(availableMinutes: max(0, available))
+        screenTimeBadgeView.configure(availableMinutes: repo.availableMinutes)
         updateBlockedAppsLabel()
+    }
+
+    /// Подтянуть данные о потраченных минутах из DeviceActivityMonitor (App Group).
+    private func syncSpentMinutesFromMonitor() {
+        let monitorSpent = ScreenTimeMonitoringState.spentMinutesToday
+        let repo = ActivityRepository.shared
+        let current = repo.todayRecord().spentScrollMinutes
+        if monitorSpent > current {
+            repo.updateToday(spentScrollMinutes: monitorSpent)
+        }
     }
 
     private func reloadCharts(for date: Date) {
@@ -368,8 +379,20 @@ final class HomeViewController: UIViewController {
             current: record?.pushUpsCount ?? 0,
             goal:    goals.pushUpsGoal
         )
+
+        // Для экранного времени: если смотрим сегодня, берём актуальные данные из монитора
+        let spentMinutes: Int
+        if key == ActivityRepository.shared.todayKey {
+            spentMinutes = max(
+                record?.spentScrollMinutes ?? 0,
+                ScreenTimeMonitoringState.spentMinutesToday
+            )
+        } else {
+            spentMinutes = record?.spentScrollMinutes ?? 0
+        }
+
         screenTimeCard.configure(
-            current: record?.spentScrollMinutes ?? 0,
+            current: spentMinutes,
             goal:    goals.scrollMinutesGoal
         )
     }
@@ -434,9 +457,21 @@ final class HomeViewController: UIViewController {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Готово") { [weak self] in
                         BlockedAppsRepository.shared.save(selection)
-                        AppBlockingManager.shared.applyBlocking(for: selection)
+
+                        let available = ActivityRepository.shared.availableMinutes
+                        if available > 0 {
+                            // Есть доступные минуты — перезапустить мониторинг с новым набором
+                            AppBlockingManager.shared.grantAccessAndStartMonitoring(
+                                availableMinutes: available,
+                                selection: selection
+                            )
+                        } else {
+                            // Минут нет — заблокировать
+                            AppBlockingManager.shared.applyBlocking(for: selection)
+                        }
+
                         self?.dismiss(animated: true) {
-                            self?.updateBlockedAppsLabel()
+                            self?.loadData()
                         }
                     }
                 }

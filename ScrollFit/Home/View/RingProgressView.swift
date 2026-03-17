@@ -12,6 +12,11 @@ final class RingProgressView: UIView {
         didSet { progressLayer.strokeEnd = progress.clamped(to: 0...1) }
     }
 
+    /// Цвет кольца прогресса. По умолчанию белый.
+    var progressColor: UIColor = .white {
+        didSet { progressLayer.strokeColor = progressColor.cgColor }
+    }
+
     private let lineWidth: CGFloat = 9
 
     private let trackLayer    = CAShapeLayer()
