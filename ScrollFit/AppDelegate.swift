@@ -13,7 +13,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Восстановить блокировку приложений при запуске
+        if BlockedAppsRepository.shared.hasSelection {
+            let selection = BlockedAppsRepository.shared.load()
+            AppBlockingManager.shared.applyBlocking(for: selection)
+        }
         return true
     }
 
