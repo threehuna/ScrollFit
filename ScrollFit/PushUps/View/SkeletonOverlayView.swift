@@ -9,13 +9,13 @@ final class SkeletonOverlayView: UIView {
 
     // MARK: - Appearance
 
-    var boneColor:   UIColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1) // #a5f133
-    var jointColor:  UIColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
+    var boneColor:   UIColor = UIColor(.scrollFitGreen) 
+    var jointColor:  UIColor = UIColor(.scrollFitGreen)
     var lineWidth:   CGFloat = 3
     var jointRadius: CGFloat = 5
 
     /// Stale frame limit (must match PoseSmoother.staleFrameLimit for correct fade).
-    var fadeOverFrames: Int = 8
+    var fadeOverFrames: Int = 15
 
     // MARK: - State
 
@@ -70,12 +70,15 @@ final class SkeletonOverlayView: UIView {
 
         for (a, b) in connections {
             guard let a, let b, a.isValid, b.isValid else { continue }
-            // Alpha based on the stalest of the two joints
+            let ptA = screenPoint(a.position)
+            let ptB = screenPoint(b.position)
+            // Не рисуем «растянутые» кости при некорректной экстраполяции
+            guard shouldDrawBone(from: ptA, to: ptB) else { continue }
             let alpha = fadeAlpha(maxStaleAge: max(a.staleAge, b.staleAge))
             boneColor.withAlphaComponent(alpha).setStroke()
             ctx.setLineWidth(lineWidth)
-            ctx.move(to: screenPoint(a.position))
-            ctx.addLine(to: screenPoint(b.position))
+            ctx.move(to: ptA)
+            ctx.addLine(to: ptB)
             ctx.strokePath()
         }
     }
@@ -103,11 +106,19 @@ final class SkeletonOverlayView: UIView {
         }
     }
 
-    /// Returns opacity 1.0 for fresh joints, fading toward 0.2 as staleAge approaches fadeOverFrames.
+    /// Кость не рисуется, если расстояние между концами превышает ширину экрана
+    /// (защита от визуально «растянутых» линий при некорректной экстраполяции).
+    private func shouldDrawBone(from a: CGPoint, to b: CGPoint) -> Bool {
+        let dx = a.x - b.x
+        let dy = a.y - b.y
+        return dx * dx + dy * dy < bounds.width * bounds.width
+    }
+
+    /// Returns opacity 1.0 for fresh joints, fading toward 0.30 as staleAge approaches fadeOverFrames.
     private func fadeAlpha(maxStaleAge: Int) -> CGFloat {
         guard maxStaleAge > 0, fadeOverFrames > 0 else { return 1.0 }
         let t = CGFloat(maxStaleAge) / CGFloat(fadeOverFrames)
-        return max(0.15, 1.0 - t * 0.85)
+        return max(0.30, 1.0 - t * 0.70)
     }
 
     private func screenPoint(_ normalized: CGPoint) -> CGPoint {

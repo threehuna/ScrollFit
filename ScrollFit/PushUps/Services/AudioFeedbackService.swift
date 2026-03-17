@@ -21,6 +21,7 @@ final class AudioFeedbackService {
     /// Short satisfying tap played on each counted rep.
     /// System sound 1057 = "key_press_click" — low latency, no AVAudioPlayer overhead.
     func playRepCompleted() {
+        guard !UserDefaults.standard.bool(forKey: "scrollfit.sound.muted") else { return }
         AudioServicesPlaySystemSound(1057)
     }
 }

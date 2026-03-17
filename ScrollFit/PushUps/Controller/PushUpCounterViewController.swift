@@ -7,10 +7,12 @@ import Vision
 
 final class PushUpCounterViewController: UIViewController {
 
-    // MARK: - Coordinator callback
+    // MARK: - Coordinator callbacks
 
-    /// WorkoutCoordinator подписывается на это замыкание для обработки завершения.
+    /// Пользователь нажал «Отмена» (0 отжиманий).
     var onCancel: (() -> Void)?
+    /// Пользователь нажал «Получить N мин.» — передаёт количество отжиманий.
+    var onFinish: ((Int) -> Void)?
 
     // MARK: - Dependencies
 
@@ -31,10 +33,10 @@ final class PushUpCounterViewController: UIViewController {
     }()
 
     private let logoImageView: UIImageView = {
-        let config = UIImage.SymbolConfiguration(pointSize: 26, weight: .semibold)
-        let image  = UIImage(systemName: "figure.strengthtraining.traditional", withConfiguration: config)
+        let image  = UIImage(named: "scrollFitLogo")
+        image?.withRenderingMode(.alwaysOriginal)
         let view   = UIImageView(image: image)
-        view.tintColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
+        view.tintColor = UIColor(.scrollFitGreen)
         view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -65,9 +67,9 @@ final class PushUpCounterViewController: UIViewController {
     private let cancelButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Отмена", for: .normal)
-        btn.setTitleColor(UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1), for: .normal)
+        btn.setTitleColor(UIColor(.scrollFitWhite), for: .normal)
         btn.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 20) ?? UIFont.boldSystemFont(ofSize: 20)
-        btn.backgroundColor = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1)
+        btn.backgroundColor = UIColor(.scrollFitGreen)
         btn.layer.cornerRadius = 31
         btn.clipsToBounds = true
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -138,8 +140,8 @@ final class PushUpCounterViewController: UIViewController {
             // Logo + Title (centered together in headerView)
             logoImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             logoImageView.trailingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -8),
-            logoImageView.widthAnchor.constraint(equalToConstant: 32),
-            logoImageView.heightAnchor.constraint(equalToConstant: 32),
+            logoImageView.widthAnchor.constraint(equalToConstant: 42),
+            logoImageView.heightAnchor.constraint(equalToConstant: 42),
 
             titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor, constant: 20),
@@ -177,18 +179,18 @@ final class PushUpCounterViewController: UIViewController {
     // MARK: - Setup Appearance
 
     private func setupGradient() {
-        let darkTop  = UIColor(red: 0.196, green: 0.192, blue: 0.196, alpha: 1).cgColor  // #323132
-        let grayBot  = UIColor(red: 0.596, green: 0.584, blue: 0.596, alpha: 1).cgColor  // #989598
+        let darkTop  = UIColor(.scrollFitBlack).cgColor
+        let grayBot  = UIColor(.scrollFitGray).cgColor  
         gradientLayer.colors     = [darkTop, grayBot]
         gradientLayer.locations  = [0.0, 1.0]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.2)
         gradientLayer.endPoint   = CGPoint(x: 0.5, y: 1)
     }
 
     // MARK: - Setup Actions
 
     private func setupActions() {
-        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(primaryButtonTapped), for: .touchUpInside)
     }
 
     // MARK: - Setup Services
@@ -239,12 +241,16 @@ final class PushUpCounterViewController: UIViewController {
 
     // MARK: - Actions
 
-    @objc private func cancelTapped() {
+    @objc private func primaryButtonTapped() {
+        let count = pushUpAnalyzer.repCount
         cameraManager.stop()
         pushUpAnalyzer.reset()
         poseSmoother.reset()
-        // Уведомляем координатор — он решает, как закрыть экран
-        onCancel?()
+        if count == 0 {
+            onCancel?()
+        } else {
+            onFinish?(count)
+        }
     }
 
     // MARK: - UI Update
@@ -252,10 +258,20 @@ final class PushUpCounterViewController: UIViewController {
     private func apply(_ result: PushUpAnalysisResult) {
         repCounterView.setCount(result.repCount)
         instructionBarView.setText(result.instructionText)
+        updatePrimaryButton(repCount: result.repCount)
 
         if result.didCompleteRep {
             repCounterView.animatePulse()
             audioFeedbackService.playRepCompleted()
+        }
+    }
+
+    private func updatePrimaryButton(repCount: Int) {
+        if repCount == 0 {
+            cancelButton.setTitle("Отмена", for: .normal)
+        } else {
+            let minutes = repCount * ActivityRepository.shared.scrollMinutesPerPushUp
+            cancelButton.setTitle("Получить \(minutes) мин.", for: .normal)
         }
     }
 

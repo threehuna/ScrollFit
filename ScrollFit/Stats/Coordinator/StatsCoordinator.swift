@@ -16,6 +16,7 @@ final class StatsCoordinator: Coordinator {
 
     private(set) lazy var navigationController: UINavigationController = {
         let nav = UINavigationController()
+        nav.view.backgroundColor = UIColor(.scrollFitBlack)
         nav.tabBarItem = UITabBarItem(
             title: "Статистика",
             image: UIImage(systemName: "chart.bar"),

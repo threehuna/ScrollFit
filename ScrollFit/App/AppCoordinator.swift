@@ -18,10 +18,23 @@ final class AppCoordinator: Coordinator {
     }
 
     func start() {
-        showMainFlow()
+        if OnboardingCoordinator.isCompleted {
+            showMainFlow()
+        } else {
+            showOnboardingFlow()
+        }
     }
 
     // MARK: - Flows
+
+    private func showOnboardingFlow() {
+        let coordinator = OnboardingCoordinator()
+        coordinator.delegate = self
+        addChild(coordinator)
+        coordinator.start()
+        window.rootViewController = coordinator.rootViewController
+        window.makeKeyAndVisible()
+    }
 
     private func showMainFlow() {
         let tabBar = TabBarCoordinator()
@@ -52,6 +65,15 @@ final class AppCoordinator: Coordinator {
 extension AppCoordinator: TabBarCoordinatorWorkoutDelegate {
     func tabBarCoordinatorDidRequestWorkout(_ coordinator: TabBarCoordinator) {
         showWorkoutFlow()
+    }
+}
+
+// MARK: - OnboardingCoordinatorDelegate
+
+extension AppCoordinator: OnboardingCoordinatorDelegate {
+    func onboardingCoordinatorDidFinish(_ coordinator: OnboardingCoordinator) {
+        removeChild(coordinator)
+        showMainFlow()
     }
 }
 

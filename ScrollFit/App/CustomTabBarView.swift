@@ -14,7 +14,7 @@ final class CustomTabBarView: UIView {
     private let workoutButton = UIButton(type: .system)
     private let statsButton   = UIButton(type: .system)
 
-    private let green = UIColor(red: 0.647, green: 0.945, blue: 0.200, alpha: 1) // #a5f133
+    private let green = UIColor(.scrollFitGreen) 
 
     // MARK: - Init
 
