@@ -35,8 +35,18 @@ final class WorkoutCoordinator: Coordinator {
         vc.onFinish = { [weak self] pushUps in
             guard let self else { return }
             ActivityRepository.shared.recordSession(pushUps: pushUps)
-            self.delegate?.workoutCoordinatorDidFinish(self)
+            let minutes = pushUps * ActivityRepository.shared.scrollMinutesPerPushUp
+            self.showResult(earnedMinutes: minutes)
         }
         navigationController.setViewControllers([vc], animated: false)
+    }
+
+    private func showResult(earnedMinutes: Int) {
+        let vc = WorkoutResultViewController(earnedMinutes: earnedMinutes)
+        vc.onClaim = { [weak self] in
+            guard let self else { return }
+            self.delegate?.workoutCoordinatorDidFinish(self)
+        }
+        navigationController.pushViewController(vc, animated: true)
     }
 }

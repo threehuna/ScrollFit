@@ -67,7 +67,7 @@ final class PushUpCounterViewController: UIViewController {
     private let cancelButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Отмена", for: .normal)
-        btn.setTitleColor(UIColor(.scrollFitBlack), for: .normal)
+        btn.setTitleColor(UIColor(.scrollFitWhite), for: .normal)
         btn.titleLabel?.font = UIFont(name: "Helvetica-Bold", size: 20) ?? UIFont.boldSystemFont(ofSize: 20)
         btn.backgroundColor = UIColor(.scrollFitGreen)
         btn.layer.cornerRadius = 31
